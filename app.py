@@ -99,7 +99,7 @@ if st.button("결과 보기"):
             st.markdown("### 📜 단기납 계산 요약")
             st.write(f"- 원금 합계 (5년): {format_currency_trim(total_insurance)}")
             st.write(f"- 10년 시점 해지회급금: {format_currency_trim(refund)}")
-            st.write(f"- 보너스 금액: {format_currency_trim(bonus)}")
+            st.write(f"- 단기납 보너스 금액: {format_currency_trim(bonus)}")
 
         # 핵심 요약
         st.markdown("### ✅ 핵심 요약 (만원 단위 미만은 삭제)")
@@ -109,8 +109,8 @@ if st.button("결과 보기"):
             st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
-            st.metric("보너스 총합 (단기납 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
-            st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
+            st.metric("단기납 보너스 총합 (10년 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.markdown(emphasize_box(f"단기납 보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
         # 인쇄 CSS 처리
         st.markdown("""
