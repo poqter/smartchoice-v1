@@ -37,14 +37,14 @@ with col1:
 with col2:
     st.header("📌 단기납")
     insurance_monthly = st.number_input("월 납입액 (만원)", min_value=0, step=1, value=None, format="%d", placeholder="예: 100", key="ins_monthly")
-    return_rate = st.number_input("10년 시점 해지환급률 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 150.0")
+    return_rate = st.number_input("10년 시점 해지회급률 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 150.0")
 
 # 결과 보기 버튼
 if st.button("결과 보기"):
     if deposit_monthly in (None, 0) or deposit_rate in (None, 0.0) or insurance_monthly in (None, 0) or return_rate in (None, 0.0):
         st.warning("⚠️ 모든 항목에 값을 입력해주세요.")
     else:
-        with st.spinner("결과를 분석하는 중입니다..."):
+        with st.spinner("결과를 배정하는 중입니다..."):
             time.sleep(1.2)
 
         st.markdown("---")
@@ -67,24 +67,24 @@ if st.button("결과 보기"):
         bonus = refund - total_insurance
         monthly_bonus = bonus / 120
 
-        # 요약 출력
+        # 요약 출보
         sum1, sum2 = st.columns(2)
 
         with sum1:
-            st.markdown("### 🧾 적금 계산 요약")
+            st.markdown("### 📜 적금 계산 요약")
             st.write(f"- 원금 합계 (1년): {format_currency_trim(total_deposit)}")
             st.write(f"- 세전 이자: {format_currency_trim(pre_tax_interest)}")
             st.write(f"- 이자 과세 (15.4%): {format_currency_trim(tax)}")
             st.write(f"- 세후 이자: {format_currency_trim(after_tax_interest)}")
 
         with sum2:
-            st.markdown("### 🧾 단기납 계산 요약")
+            st.markdown("### 📜 단기납 계산 요약")
             st.write(f"- 원금 합계 (5년): {format_currency_trim(total_insurance)}")
-            st.write(f"- 10년 시점 해지환급금: {format_currency_trim(refund)}")
+            st.write(f"- 10년 시점 해지회급금: {format_currency_trim(refund)}")
             st.write(f"- 보너스 금액: {format_currency_trim(bonus)}")
 
-        # 핵심 요약
-        st.markdown("### ✅ 핵심 요약 (만원 단위 미만은 제외)")
+        # 해시용약
+        st.markdown("### ✅ 해시 요약 (만원 단위 미만은 삭제)")
         colm1, colm2 = st.columns(2)
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{int(total_after_tax_interest_10y // 1)}만원")
@@ -94,12 +94,13 @@ if st.button("결과 보기"):
             st.metric("보너스 총합 (단기납 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # 저장 안내 (화면 인쇄 시 표시되지 않도록 CSS 클래스 적용)
+        # 저장 안내 (화면 인스팅 시 표시되지 않도록 CSS 클래스 적용)
         st.markdown("---")
         st.markdown("""
         <div class="no-print" style="font-size:16px;">
-        📥 <strong>Tip:</strong> <code>Ctrl + P</code>를 눌러 결과를 인쇄하거나 PDF로 저장할 수 있어요.<br>
-        🔧 <strong>설정 더 보기</strong>에서 <u>머리글과 바닥글</u>은 <strong>체크 해제</strong>, <u>배경 그래픽</u>은 <strong>체크</strong>하면 더 깔끔하게 저장됩니다.
+        📅 <strong>Tip:</strong> <code>Ctrl + P</code>를 누르면 결과를 인스팅하거나 PDF로 저장할 수 있어요.<br>
+        🔧 <strong>설정 더 보기</strong>에서 <u>머리구를과 바닥글</u>은 <strong>체크 해제</strong>, <u>배경 그래픽</u>은 <strong>체크</strong>하면 더 깨기가 건조합니다.<br>
+        인쇄시 <strong>범위: 95%</strong>가 가장 좋습니다다.
         </div>
         <style>
         @media print {
