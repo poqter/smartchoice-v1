@@ -1,9 +1,6 @@
 import streamlit as st
 import pandas as pd
 import time
-from fpdf import FPDF
-from io import BytesIO
-import os
 
 # 페이지 설정
 st.set_page_config(page_title="적금 vs 단기납 비교", layout="wide")
@@ -14,21 +11,6 @@ def emphasize_box(text, bg="#e6f2ff", color="#003366"):
                 font-size:20px; font-weight:bold; margin-bottom:10px;'>
                 {text}
              </div>"""
-
-# PDF 저장 함수
-def generate_pdf(summary_text):
-    pdf = FPDF()
-    pdf.add_page()
-
-    # ✅ 한글 폰트 등록
-    font_path = os.path.join("fonts", "NanumGothic.ttf")
-    pdf.add_font("Nanum", "", font_path, uni=True)
-    pdf.set_font("Nanum", size=12)
-
-    for line in summary_text.strip().split("\n"):
-        pdf.cell(0, 10, line, ln=True)
-    pdf_bytes = pdf.output(dest='S').encode('latin1', errors='replace')
-    return BytesIO(pdf_bytes)
 
 # 타이틀
 st.title("💰 적금 vs 단기납 비교 배경 도구")
@@ -79,7 +61,6 @@ if st.button("결과 보기"):
             st.write(f"- 세전 이자: {pre_tax_interest:,.0f}만원")
             st.write(f"- 이자 과세 (15.4%): {tax:,.0f}만원")
             st.write(f"- 세후 이자: {after_tax_interest:,.0f}만원")
-            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
             st.write(f"- 세후 이자 x 10년: {total_after_tax_interest_10y:,.0f}만원")
 
         with sum2:
@@ -87,36 +68,17 @@ if st.button("결과 보기"):
             st.write(f"- 원금 합계 (5년): {total_insurance:,.0f}만원")
             st.write(f"- 10년 시점 해지환급금: {refund:,.0f}만원")
             st.write(f"- 보너스 금액: {bonus:,.0f}만원")
-            st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
         # 핵심 요약
         st.markdown("### ✅ 핵심 요약")
         colm1, colm2 = st.columns(2)
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{total_after_tax_interest_10y:,.0f}만원")
+            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # PDF 저장용 텍스트 생성
+        # 인쇄 버튼
         st.markdown("---")
-        summary_text = f"""
-📌 적금
-- 원금 합계 (1년): {total_deposit:,.0f}만원
-- 세전 이자: {pre_tax_interest:,.0f}만원
-- 이자 과세 (15.4%): {tax:,.0f}만원
-- 세후 이자: {after_tax_interest:,.0f}만원
-- 세후 이자 월 평균: {monthly_avg_interest:,.2f}만원
-- 세후 이자 x 10년: {total_after_tax_interest_10y:,.0f}만원
-
-📌 단기납
-- 원금 합계 (5년): {total_insurance:,.0f}만원
-- 10년 시점 해지환급금: {refund:,.0f}만원
-- 보너스 금액: {bonus:,.0f}만원
-- 보너스 월 평균: {monthly_bonus:,.2f}만원
-
-✅ 핵심 요약
-- 세후 이자 총합 (10년 기준): {total_after_tax_interest_10y:,.0f}만원
-- 보너스 총합 (단기납 기준): {bonus:,.0f}만원
-"""
-        pdf_file = generate_pdf(summary_text)
-        st.download_button("📅 PDF 다운로드", data=pdf_file, file_name="결과_요약.pdf", mime="application/pdf")
+        st.markdown("<center><button onclick=\"window.print()\" style=\"padding:10px 20px; font-size:16px; font-weight:bold; background-color:#4CAF50; color:white; border:none; border-radius:8px;\">🖨️ 인쇄하기</button></center>", unsafe_allow_html=True)
