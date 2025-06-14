@@ -45,11 +45,9 @@ body, html {
 }
 [data-testid="stAppViewContainer"] {
     background-color: white !important;
-    color: black !important;
 }
 [data-testid="stSidebar"] {
     background-color: #f7f7f7 !important;
-    color: black !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -134,8 +132,6 @@ if st.button("결과 보기"):
                 padding: 0;
                 height: auto !important;
                 overflow: visible !important;
-                color: black !important;
-                background: white !important;
             }
             .block-container {
                 padding-bottom: 0 !important;
