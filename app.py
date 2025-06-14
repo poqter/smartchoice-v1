@@ -38,10 +38,9 @@ if st.button("결과 보기"):
         pre_tax_interest = total_deposit * (deposit_rate / 100)
         tax = pre_tax_interest * 0.154
         after_tax_interest = pre_tax_interest - tax
-        total_after_tax_interest_10y = after_tax_interest * 10
         monthly_avg_interest = after_tax_interest / 12
 
-        total_insurance = insurance_monthly * 12 * 10  # 10년 기준
+        total_insurance = insurance_monthly * 12 * 5  # 5년 기준
         refund = total_insurance * (return_rate / 100)
         bonus = refund - total_insurance
         monthly_bonus = bonus / 120
@@ -54,12 +53,11 @@ if st.button("결과 보기"):
             st.write(f"- 세전 이자: {pre_tax_interest:,.0f}만원")
             st.write(f"- 이자 과세 (15.4%): {tax:,.0f}만원")
             st.write(f"- 세후 이자: {after_tax_interest:,.0f}만원")
-            st.write(f"- 세후 이자 × 10년: {total_after_tax_interest_10y:,.0f}만원")
             st.write(f"- 세후 이자 월 평균: {monthly_avg_interest:,.2f}만원")
 
         with sum2:
             st.markdown("### 🧾 단기납 계산 요약")
-            st.write(f"- 원금 합계 (10년): {total_insurance:,.0f}만원")
+            st.write(f"- 원금 합계 (5년): {total_insurance:,.0f}만원")
             st.write(f"- 해지환급금: {refund:,.0f}만원")
             st.write(f"- 보너스 금액: {bonus:,.0f}만원")
             st.write(f"- 보너스 월 평균: {monthly_bonus:,.2f}만원")
@@ -73,7 +71,7 @@ if st.button("결과 보기"):
             ],
             "적금": [
                 f"{total_deposit:,.0f}만원",
-                f"{total_after_tax_interest_10y:,.0f}만원",
+                f"{after_tax_interest * 10:,.0f}만원",
                 f"{monthly_avg_interest:,.2f}만원"
             ],
             "단기납": [
@@ -83,7 +81,7 @@ if st.button("결과 보기"):
             ],
             "차이": [
                 f"{total_deposit - total_insurance:,.0f}만원",
-                f"{bonus - total_after_tax_interest_10y:,.0f}만원",
+                f"{bonus - (after_tax_interest * 10):,.0f}만원",
                 f"{monthly_bonus - monthly_avg_interest:,.2f}만원"
             ]
         })
@@ -95,13 +93,13 @@ if st.button("결과 보기"):
         st.markdown("### ✅ 핵심 요약")
         colm1, colm2 = st.columns(2)
         with colm1:
-            st.metric("세후 이자 총합 (적금 기준)", f"{total_after_tax_interest_10y:,.0f}만원")
+            st.metric("세후 이자 총합 (적금 기준)", f"{after_tax_interest * 10:,.0f}만원")
         with colm2:
-            st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - (after_tax_interest * 10):,.0f}만원")
 
         # 그래프 시각화
         fig = go.Figure(data=[
-            go.Bar(name='적금', x=['원금', '수익'], y=[total_deposit, total_after_tax_interest_10y]),
+            go.Bar(name='적금', x=['원금', '수익'], y=[total_deposit, after_tax_interest * 10]),
             go.Bar(name='단기납', x=['원금', '수익'], y=[total_insurance, bonus])
         ])
         fig.update_layout(barmode='group', title='💹 적금 vs 단기납 수익 비교')
