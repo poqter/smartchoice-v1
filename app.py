@@ -1,9 +1,5 @@
 import streamlit as st
-import pandas as pd
 import time
-import streamlit.components.v1 as components
-from PIL import Image, ImageDraw
-import io
 
 # 페이지 설정
 st.set_page_config(page_title="적금 vs 단기납 비교", layout="wide")
@@ -37,12 +33,10 @@ with st.sidebar:
     🔍 **배율은 95%**로 설정하는 것이 가장 적절합니다.
     """)
 
-# 헤더 아이콘 제거
+# 제목 링크 아이콘 숨기기
 st.markdown("""
 <style>
-h1:hover a.anchor-link,
-h2:hover a.anchor-link,
-h3:hover a.anchor-link {
+h1 a, h2 a, h3 a {
     display: none !important;
 }
 </style>
@@ -69,7 +63,7 @@ if st.button("결과 보기"):
     if deposit_monthly in (None, 0) or deposit_rate in (None, 0.0) or insurance_monthly in (None, 0) or return_rate in (None, 0.0):
         st.warning("⚠️ 모든 항목에 값을 입력해주세요.")
     else:
-        with st.spinner("결과를 배정하는 중입니다..."):
+        with st.spinner("결과를 계산 중입니다..."):
             time.sleep(1.2)
 
         st.markdown("---")
@@ -78,15 +72,14 @@ if st.button("결과 보기"):
         # 적금 이자 계산 (12개월 분할 계산)
         monthly_rate = (deposit_rate / 100) / 12
         total_deposit = deposit_monthly * 12
-        interest_sum = 0
-        for m in range(12):
-            interest_sum += deposit_monthly * monthly_rate * (12 - m)
+        interest_sum = sum([deposit_monthly * monthly_rate * (12 - m) for m in range(12)])
         pre_tax_interest = interest_sum
         tax = pre_tax_interest * 0.154
         after_tax_interest = pre_tax_interest - tax
         monthly_avg_interest = after_tax_interest / 12
         total_after_tax_interest_10y = after_tax_interest * 10
 
+        # 단기납 계산
         total_insurance = insurance_monthly * 12 * 5
         refund = total_insurance * (return_rate / 100)
         bonus = refund - total_insurance
@@ -117,9 +110,10 @@ if st.button("결과 보기"):
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # 화면 인쇄 시 표시되지 않도록 CSS 처리 및 빈 페이지 방지
+        # 인쇄 CSS 처리
         st.markdown("""
         <style>
         @media print {
@@ -139,6 +133,9 @@ if st.button("결과 보기"):
             .no-print {
                 display: none;
             }
+        }
+        h1 a, h2 a, h3 a {
+            display: none !important;
         }
         </style>
         """, unsafe_allow_html=True)
