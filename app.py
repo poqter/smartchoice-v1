@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
 import time
 
 # 페이지 설정
@@ -39,6 +38,7 @@ if st.button("결과 보기"):
         tax = pre_tax_interest * 0.154
         after_tax_interest = pre_tax_interest - tax
         monthly_avg_interest = after_tax_interest / 12
+        total_after_tax_interest_10y = after_tax_interest * 10
 
         total_insurance = insurance_monthly * 12 * 5  # 5년 기준
         refund = total_insurance * (return_rate / 100)
@@ -53,54 +53,20 @@ if st.button("결과 보기"):
             st.write(f"- 세전 이자: {pre_tax_interest:,.0f}만원")
             st.write(f"- 이자 과세 (15.4%): {tax:,.0f}만원")
             st.write(f"- 세후 이자: {after_tax_interest:,.0f}만원")
+            st.write(f"- 세후 이자 × 10년: {total_after_tax_interest_10y:,.0f}만원")
             st.write(f"- 세후 이자 월 평균: {monthly_avg_interest:,.2f}만원")
 
         with sum2:
             st.markdown("### 🧾 단기납 계산 요약")
             st.write(f"- 원금 합계 (5년): {total_insurance:,.0f}만원")
-            st.write(f"- 해지환급금: {refund:,.0f}만원")
+            st.write(f"- 10년 시점 해지환급금: {refund:,.0f}만원")
             st.write(f"- 보너스 금액: {bonus:,.0f}만원")
             st.write(f"- 보너스 월 평균: {monthly_bonus:,.2f}만원")
-
-        # 비교 테이블 생성
-        compare_df = pd.DataFrame({
-            "항목": [
-                "원금 합계",
-                "수익 총합",
-                "월평균 수익"
-            ],
-            "적금": [
-                f"{total_deposit:,.0f}만원",
-                f"{after_tax_interest * 10:,.0f}만원",
-                f"{monthly_avg_interest:,.2f}만원"
-            ],
-            "단기납": [
-                f"{total_insurance:,.0f}만원",
-                f"{bonus:,.0f}만원",
-                f"{monthly_bonus:,.2f}만원"
-            ],
-            "차이": [
-                f"{total_deposit - total_insurance:,.0f}만원",
-                f"{bonus - (after_tax_interest * 10):,.0f}만원",
-                f"{monthly_bonus - monthly_avg_interest:,.2f}만원"
-            ]
-        })
-
-        st.markdown("### 📊 비교 테이블")
-        st.table(compare_df)
 
         # metric 강조
         st.markdown("### ✅ 핵심 요약")
         colm1, colm2 = st.columns(2)
         with colm1:
-            st.metric("세후 이자 총합 (적금 기준)", f"{after_tax_interest * 10:,.0f}만원")
+            st.metric("세후 이자 총합 (10년 기준)", f"{total_after_tax_interest_10y:,.0f}만원")
         with colm2:
-            st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - (after_tax_interest * 10):,.0f}만원")
-
-        # 그래프 시각화
-        fig = go.Figure(data=[
-            go.Bar(name='적금', x=['원금', '수익'], y=[total_deposit, after_tax_interest * 10]),
-            go.Bar(name='단기납', x=['원금', '수익'], y=[total_insurance, bonus])
-        ])
-        fig.update_layout(barmode='group', title='💹 적금 vs 단기납 수익 비교')
-        st.plotly_chart(fig)
+            st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
