@@ -42,15 +42,18 @@ if st.button("결과 보기"):
         st.markdown("---")
         st.subheader("🔍 결과 분석")
 
-        # 적금 이자 계산 (월복리처럼 각 월별 이자 반영)
+        # 적금 이자 계산 (12개월 분할 계산)
+        monthly_rate = (deposit_rate / 100) / 12
         total_deposit = deposit_monthly * 12
-        pre_tax_interest = sum(deposit_monthly * (deposit_rate / 100) * ((12 - i) / 12) for i in range(12))
+        interest_sum = 0
+        for m in range(12):
+            interest_sum += deposit_monthly * monthly_rate * (12 - m)
+        pre_tax_interest = interest_sum
         tax = pre_tax_interest * 0.154
         after_tax_interest = pre_tax_interest - tax
         monthly_avg_interest = after_tax_interest / 12
         total_after_tax_interest_10y = after_tax_interest * 10
 
-        # 단기납 계산
         total_insurance = insurance_monthly * 12 * 5
         refund = total_insurance * (return_rate / 100)
         bonus = refund - total_insurance
@@ -61,10 +64,10 @@ if st.button("결과 보기"):
 
         with sum1:
             st.markdown("### 🧾 적금 계산 요약")
-            st.write(f"- 원금 합계 (1년): {total_deposit:,.0f}만원")
-            st.write(f"- 세전 이자: {pre_tax_interest:,.0f}만원")
-            st.write(f"- 이자 과세 (15.4%): {tax:,.0f}만원")
-            st.write(f"- 세후 이자: {after_tax_interest:,.0f}만원")
+            st.write(f"- 원금 합계 (1년): {total_deposit * 10000:,.0f}원")
+            st.write(f"- 세전 이자: {pre_tax_interest * 10000:,.0f}원")
+            st.write(f"- 이자 과세 (15.4%): {tax * 10000:,.0f}원")
+            st.write(f"- 세후 이자: {after_tax_interest * 10000:,.0f}원")
 
         with sum2:
             st.markdown("### 🧾 단기납 계산 요약")
