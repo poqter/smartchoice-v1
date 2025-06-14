@@ -100,7 +100,7 @@ if st.button("결과 보기"):
             st.write(f"- 원금 합계 (5년): {format_currency_trim(total_insurance)}")
             st.write(f"- 10년 시점 해지환환급금: {format_currency_trim(refund)}")
             st.write(f"- 단기납 보너스 금액: {format_currency_trim(bonus)}")
-            st.caption("💡 10년 이후 해지 시, **비과세 혜택** 적용 가능")
+            st.caption(f"-💡 10년 이후 해지 시, **비과세 혜택** 적용 가능")
 
         # 핵심 요약
         st.markdown("### ✅ 핵심 요약 (만원 단위 미만은 삭제)")
