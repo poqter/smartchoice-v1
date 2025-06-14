@@ -84,8 +84,8 @@ if st.button("결과 보기"):
         st.markdown("---")
         st.markdown("""
         <div class="no-print" style="font-size:16px;">
-        📥 <strong>Tip:</strong> 결과를 PDF로 저장하고 싶다면 아래 버튼을 클릭하세요.<br><br>
-        <a href="https://your-external-site.com/save.html" target="_blank" style="text-decoration:none;">
+        📥 <strong>Tip:</strong> 결과를 PDF로 저장하려면 아래 버튼을 클릭하세요.<br><br>
+        <a href="https://poqter.github.io/pdf-export/save.html" target="_blank" style="text-decoration:none;">
             <button style="padding:10px 20px; font-size:16px; font-weight:bold;
             background-color:#4CAF50; color:white; border:none; border-radius:8px; cursor:pointer;">
             📄 결과 저장 페이지 열기</button>
