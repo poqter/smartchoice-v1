@@ -58,7 +58,7 @@ with col1:
 with col2:
     st.header("📌 단기납")
     insurance_monthly = st.number_input("월 납입액 (만원)", min_value=0, step=1, value=None, format="%d", placeholder="예: 100", key="ins_monthly")
-    return_rate = st.number_input("10년 시점 해지회급률 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 150.0")
+    return_rate = st.number_input("10년 시점 해지환환급률 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 123.0")
 
 # 결과 보기 버튼
 if st.button("결과 보기"):
@@ -66,7 +66,7 @@ if st.button("결과 보기"):
         st.warning("⚠️ 모든 항목에 값을 입력해주세요.")
     else:
         with st.spinner("결과를 계산 중입니다..."):
-            time.sleep(1.2)
+            time.sleep(0.5)
 
         st.markdown("---")
         st.subheader("🔍 결과 분석")
@@ -100,7 +100,7 @@ if st.button("결과 보기"):
         with sum2:
             st.markdown("### 📜 단기납 계산 요약")
             st.write(f"- 원금 합계 (5년): {format_currency_trim(total_insurance)}")
-            st.write(f"- 10년 시점 해지환환급금: {format_currency_trim(refund)}")
+            st.write(f"- 10년 시점 해지환급금: {format_currency_trim(refund)}")
             st.write(f"- 단기납 보너스 금액: {format_currency_trim(bonus)}")
             st.write(f"- 10년 이후 해지 시, **비과세 혜택** 적용 가능")
 
