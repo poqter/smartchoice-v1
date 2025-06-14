@@ -81,6 +81,15 @@ if st.button("결과 보기"):
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
 
+        # 추천 메시지 출력
+        st.markdown("### 💡 맞춤 해설")
+        if bonus > total_after_tax_interest_10y:
+            st.success("✅ 단기납이 적금보다 총 수익 측면에서 유리합니다. 목돈 활용 계획이 있다면 단기납이 좋은 선택일 수 있어요.")
+        elif bonus < total_after_tax_interest_10y:
+            st.info("ℹ️ 현재 이자율 기준으로는 적금이 단기납보다 더 유리해 보입니다. 안정적인 수익을 원한다면 적금을 고려해보세요.")
+        else:
+            st.warning("⚖️ 두 상품의 수익이 거의 비슷합니다. 해지 시점이나 유동성 필요 여부를 고려해 결정하세요.")
+
         # 그래프 시각화
         fig = go.Figure(data=[
             go.Bar(name='적금', x=['원금', '수익'], y=[total_deposit, total_after_tax_interest_10y]),
