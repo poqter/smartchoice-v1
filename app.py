@@ -80,6 +80,7 @@ if st.button("결과 보기"):
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
         # 저장 안내 (화면 인쇄 시 표시되지 않도록 CSS 클래스 적용)
@@ -94,4 +95,15 @@ if st.button("결과 보기"):
             .no-print {display: none;}
         }
         </style>
+        """, unsafe_allow_html=True)
+
+        # 새 창에서 인쇄하기 버튼
+        st.markdown("""
+        <div class="no-print" style="margin-top: 30px;">
+            <a href="https://your-username.github.io/pdf-export/save.html" target="_blank" 
+               style="padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; 
+                      text-decoration: none; border-radius: 8px; font-weight: bold;">
+                📄 결과 저장 페이지 열기
+            </a>
+        </div>
         """, unsafe_allow_html=True)
