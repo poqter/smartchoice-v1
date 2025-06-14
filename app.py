@@ -74,11 +74,20 @@ if st.button("결과 보기"):
         colm1, colm2 = st.columns(2)
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{total_after_tax_interest_10y:,.0f}만원")
-            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+
+        # 강조 박스
+        colh1, colh2 = st.columns(2)
+        with colh1:
+            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
+        with colh2:
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
         # 인쇄 버튼
         st.markdown("---")
-        st.markdown("<center><button onclick=\"window.print()\" style=\"padding:10px 20px; font-size:16px; font-weight:bold; background-color:#4CAF50; color:white; border:none; border-radius:8px;\">🖨️ 인쇄하기</button></center>", unsafe_allow_html=True)
+        st.markdown("""
+            <center>
+            <button onclick="window.print()" style="padding:10px 20px; font-size:16px; font-weight:bold; background-color:#4CAF50; color:white; border:none; border-radius:8px; cursor:pointer;">
+            🖨️ 인쇄하기</button></center>
+        """, unsafe_allow_html=True)
