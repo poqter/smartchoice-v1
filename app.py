@@ -74,12 +74,22 @@ if st.button("결과 보기"):
         colm1, colm2 = st.columns(2)
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{total_after_tax_interest_10y:,.0f}만원")
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # 저장 안내
+        # 저장 안내 (화면 인쇄 시 표시되지 않도록 CSS 클래스 적용)
         st.markdown("---")
-        st.markdown("📥 **Tip:** `Ctrl + P`를 눌러 결과를 인쇄하거나 PDF로 저장할 수 있어요.  ")
-        st.markdown("🔧 **설정 더 보기**에서 `머리글과 바닥글`은 **체크 해제**, `배경 그래픽`은 **체크**하면 더 깔끔하게 저장됩니다.")
+        st.markdown("""
+        <div class="no-print" style="font-size:16px;">
+        📥 <strong>Tip:</strong> <code>Ctrl + P</code>를 눌러 결과를 인쇄하거나 PDF로 저장할 수 있어요.<br>
+        🔧 <strong>설정 더 보기</strong>에서 <u>머리글과 바닥글</u>은 <strong>체크 해제</strong>, <u>배경 그래픽</u>은 <strong>체크</strong>하면 더 깔끔하게 저장됩니다.
+        </div>
+        <style>
+        @media print {
+            .no-print {display: none;}
+        }
+        </style>
+        """, unsafe_allow_html=True)
