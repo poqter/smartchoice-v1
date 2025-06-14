@@ -15,6 +15,14 @@ def emphasize_box(text, bg="#e6f2ff", color="#003366"):
                 {text}
              </div>"""
 
+# 금액 포맷 함수
+def format_currency(value):
+    won = int(value * 10000)  # 만원 단위를 원으로 변환
+    if won % 10000 == 0:
+        return f"{won // 10000:,}만원"
+    else:
+        return f"{won:,}원"
+
 # 타이틀
 st.title("💰 적금 vs 단기납 비교")
 
@@ -64,26 +72,26 @@ if st.button("결과 보기"):
 
         with sum1:
             st.markdown("### 🧾 적금 계산 요약")
-            st.write(f"- 원금 합계 (1년): {total_deposit * 10000:,.0f}원")
-            st.write(f"- 세전 이자: {pre_tax_interest * 10000:,.0f}원")
-            st.write(f"- 이자 과세 (15.4%): {tax * 10000:,.0f}원")
-            st.write(f"- 세후 이자: {after_tax_interest * 10000:,.0f}원")
+            st.write(f"- 원금 합계 (1년): {format_currency(total_deposit)}")
+            st.write(f"- 세전 이자: {format_currency(pre_tax_interest)}")
+            st.write(f"- 이자 과세 (15.4%): {format_currency(tax)}")
+            st.write(f"- 세후 이자: {format_currency(after_tax_interest)}")
 
         with sum2:
             st.markdown("### 🧾 단기납 계산 요약")
-            st.write(f"- 원금 합계 (5년): {total_insurance:,.0f}만원")
-            st.write(f"- 10년 시점 해지환급금: {refund:,.0f}만원")
-            st.write(f"- 보너스 금액: {bonus:,.0f}만원")
+            st.write(f"- 원금 합계 (5년): {format_currency(total_insurance)}")
+            st.write(f"- 10년 시점 해지환급금: {format_currency(refund)}")
+            st.write(f"- 보너스 금액: {format_currency(bonus)}")
 
         # 핵심 요약
         st.markdown("### ✅ 핵심 요약")
         colm1, colm2 = st.columns(2)
         with colm1:
-            st.metric("세후 이자 총합 (10년 기준)", f"{total_after_tax_interest_10y:,.0f}만원")
+            st.metric("세후 이자 총합 (10년 기준)", format_currency(total_after_tax_interest_10y))
             st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
-            st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.metric("보너스 총합 (단기납 기준)", format_currency(bonus), delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
             st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
