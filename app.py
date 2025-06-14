@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import time
+from fpdf import FPDF
+from io import BytesIO
 
 # 페이지 설정
 st.set_page_config(page_title="적금 vs 단기납 비교", layout="wide")
@@ -11,6 +13,18 @@ def emphasize_box(text, bg="#e6f2ff", color="#003366"):
                 font-size:20px; font-weight:bold; margin-bottom:10px;'>
                 {text}
              </div>"""
+
+# PDF 저장 함수
+def generate_pdf(summary_text):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    for line in summary_text.split("\n"):
+        pdf.cell(200, 10, txt=line, ln=True)
+    pdf_output = BytesIO()
+    pdf.output(pdf_output)
+    pdf_output.seek(0)
+    return pdf_output
 
 # 타이틀
 st.title("💰 적금 vs 단기납 비교 분석 도구")
@@ -78,3 +92,28 @@ if st.button("결과 보기"):
             st.metric("세후 이자 총합 (10년 기준)", f"{total_after_tax_interest_10y:,.0f}만원")
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+
+        # PDF 생성 버튼
+        st.markdown("---")
+        if st.button("📄 결과 PDF로 저장"):
+            summary_text = f"""
+📌 적금
+- 원금 합계 (1년): {total_deposit:,.0f}만원
+- 세전 이자: {pre_tax_interest:,.0f}만원
+- 이자 과세 (15.4%): {tax:,.0f}만원
+- 세후 이자: {after_tax_interest:,.0f}만원
+- 세후 이자 × 10년: {total_after_tax_interest_10y:,.0f}만원
+- 세후 이자 월 평균: {monthly_avg_interest:,.2f}만원
+
+📌 단기납
+- 원금 합계 (5년): {total_insurance:,.0f}만원
+- 10년 시점 해지환급금: {refund:,.0f}만원
+- 보너스 금액: {bonus:,.0f}만원
+- 보너스 월 평균: {monthly_bonus:,.2f}만원
+
+✅ 핵심 요약
+- 세후 이자 총합 (10년 기준): {total_after_tax_interest_10y:,.0f}만원
+- 보너스 총합 (단기납 기준): {bonus:,.0f}만원
+"""
+            pdf_file = generate_pdf(summary_text)
+            st.download_button("📥 PDF 다운로드", data=pdf_file, file_name="결과_요약.pdf", mime="application/pdf")
