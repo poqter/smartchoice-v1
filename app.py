@@ -33,21 +33,11 @@ with st.sidebar:
     🔍 **배율은 95%**로 설정하는 것이 가장 적절합니다.
     """)
 
-# 제목 링크 아이콘 숨기기 및 화이트 테마 적용
+# 제목 링크 아이콘 숨기기
 st.markdown("""
 <style>
 h1 a, h2 a, h3 a {
     display: none !important;
-}
-body, html {
-    background-color: white !important;
-    color: black !important;
-}
-[data-testid="stAppViewContainer"] {
-    background-color: white !important;
-}
-[data-testid="stSidebar"] {
-    background-color: #f7f7f7 !important;
 }
 </style>
 """, unsafe_allow_html=True)
