@@ -37,6 +37,17 @@ with st.sidebar:
     🔍 **배율은 95%**로 설정하는 것이 가장 적절합니다.
     """)
 
+# 헤더 아이콘 제거
+st.markdown("""
+<style>
+h1:hover a.anchor-link,
+h2:hover a.anchor-link,
+h3:hover a.anchor-link {
+    display: none !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # 타이틀
 st.title("💰 적금 vs 단기납 비교")
 
@@ -106,6 +117,7 @@ if st.button("결과 보기"):
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
         # 화면 인쇄 시 표시되지 않도록 CSS 처리 및 빈 페이지 방지
