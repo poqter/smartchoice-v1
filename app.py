@@ -22,7 +22,6 @@ def format_currency_trim(value):
 # 사이드바 인쇄 안내
 with st.sidebar:
     st.markdown("""
-    <div style='color: black;'>
     📄 **인쇄 안내**
 
     🖨️ **Ctrl + P**를 누르면 결과를 인쇄하거나 PDF로 저장할 수 있어요.
@@ -32,30 +31,25 @@ with st.sidebar:
     - 배경 그래픽 ✅ 체크
 
     🔍 **배율은 95%**로 설정하는 것이 가장 적절합니다.
-    </div>
-    """, unsafe_allow_html=True)
+    """)
 
-# 제목 링크 아이콘 숨기기 및 화이트 테마 + 텍스트 색상 수정
+# 제목 링크 아이콘 숨기기 및 화이트 테마 적용
 st.markdown("""
 <style>
 h1 a, h2 a, h3 a {
     display: none !important;
 }
-html, body {
+body, html {
     background-color: white !important;
     color: black !important;
 }
-[data-testid="stAppViewContainer"],
-[data-testid="stSidebar"],
-.block-container,
-button, input, label, span, div, p, select, textarea {
-    color: black !important;
+[data-testid="stAppViewContainer"] {
     background-color: white !important;
+    color: black !important;
 }
-button, input, select, textarea {
-    background-color: #333 !important;
-    color: white !important;
-    border: 1px solid #ccc !important;
+[data-testid="stSidebar"] {
+    background-color: #f7f7f7 !important;
+    color: black !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -128,6 +122,7 @@ if st.button("결과 보기"):
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
         # 인쇄 CSS 처리
@@ -152,6 +147,9 @@ if st.button("결과 보기"):
             .no-print {
                 display: none;
             }
+        }
+        h1 a, h2 a, h3 a {
+            display: none !important;
         }
         </style>
         """, unsafe_allow_html=True)
