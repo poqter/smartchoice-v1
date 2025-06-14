@@ -26,6 +26,19 @@ def format_currency_trim(value):
 # 타이틀
 st.title("💰 적금 vs 단기납 비교")
 
+# 사이드바 인쇄 안내
+st.sidebar.markdown("""
+📄 **인쇄 안내**
+
+🖨️ **Ctrl + P**를 누르면 결과를 인쇄하거나 PDF로 저장할 수 있어요.
+
+🔧 **설정 더 보기**에서:
+- 머리글과 바닥글 ❌ 체크 해제
+- 배경 그래픽 ✅ 체크
+
+🔍 **배율은 95%**로 설정하는 것이 가장 적절합니다.
+""")
+
 # 입력 칼럼
 col1, col2 = st.columns(2)
 
@@ -67,7 +80,7 @@ if st.button("결과 보기"):
         bonus = refund - total_insurance
         monthly_bonus = bonus / 120
 
-        # 요약 출보
+        # 요약 출력
         sum1, sum2 = st.columns(2)
 
         with sum1:
@@ -83,8 +96,8 @@ if st.button("결과 보기"):
             st.write(f"- 10년 시점 해지회급금: {format_currency_trim(refund)}")
             st.write(f"- 보너스 금액: {format_currency_trim(bonus)}")
 
-        # 해시용약
-        st.markdown("### ✅ 해시 요약 (만원 단위 미만은 삭제)")
+        # 핵심 요약
+        st.markdown("### ✅ 핵심 요약 (만원 단위 미만은 삭제)")
         colm1, colm2 = st.columns(2)
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{int(total_after_tax_interest_10y // 1)}만원")
@@ -92,16 +105,11 @@ if st.button("결과 보기"):
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # 저장 안내 (화면 인스팅 시 표시되지 않도록 CSS 클래스 적용)
-        st.markdown("---")
+        # 화면 인쇄 시 표시되지 않도록 CSS 처리 (내용 없음)
         st.markdown("""
-        <div class="no-print" style="font-size:16px;">
-        📅 <strong>Tip:</strong> <code>Ctrl + P</code>를 누르면 결과를 인스팅하거나 PDF로 저장할 수 있어요.<br>
-        🔧 <strong>설정 더 보기</strong>에서 <u>머리구를과 바닥글</u>은 <strong>체크 해제</strong>, <u>배경 그래픽</u>은 <strong>체크</strong>하면 더 깨기가 건조합니다.<br>
-        인쇄시 <strong>범위: 95%</strong>가 가장 좋습니다다.
-        </div>
         <style>
         @media print {
             .no-print {display: none;}
