@@ -125,7 +125,7 @@ if st.button("결과 보기"):
             monthly_required = (bonus / 10) / (factor * (1 - 0.154))
             st.markdown(f"""
             <div style='font-size:18px; margin-top:8px; margin-bottom:6px;'>
-                👉 단기납 보너스 총합을 만들려면, 매달 <span style='color:red; font-weight:bold;'>{monthly_required:,.0f}만원</span>으로 변경해야 합니다.
+                👉 단기납 보너스 총합과 같으려면, 적금 월 납입액을 <span style='color:red; font-weight:bold;'>{monthly_required:,.0f}만원</span>으로 변경해야 합니다.
             </div>
             """, unsafe_allow_html=True)
         else:
@@ -137,7 +137,7 @@ if st.button("결과 보기"):
             deposit_rate_needed = r_monthly * 12 * 100
             st.markdown(f"""
             <div style='font-size:18px; margin-top:4px; margin-bottom:8px;'>
-                👉 현재 적금 월 납입액으로 같아지려면, 연 이자율이 <span style='color:red; font-weight:bold;'>{deposit_rate_needed:,.2f}%</span>이어야 합니다.
+                👉 현재 적금 월 납입액으로 단기납 보너스 총합과 같아지려면, 연 이자율이 <span style='color:red; font-weight:bold;'>{deposit_rate_needed:,.2f}%</span>여야 합니다.
             </div>
             """, unsafe_allow_html=True)
         else:
