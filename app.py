@@ -112,16 +112,16 @@ if st.button("결과 보기"):
         with colm2:
             st.metric("단기납 보너스 총합 (10년 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
             st.markdown(emphasize_box(f"단기납 보너스 월 평균: {monthly_bonus * 10000:,.0f}원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
-# 핵심 요약 밑에 추가
-st.markdown("---")
-st.markdown("### 📌 참고 계산")
+        # 핵심 요약 밑에 추가
+        st.markdown("---")
+        st.markdown("### 📌 참고 계산")
 
-effective_rate = (deposit_rate / 100) * (1 - 0.154)
-if effective_rate > 0:
-    monthly_needed = bonus / (effective_rate * 5.5)
-    st.markdown(f"👉 단기납 보너스 총합을 적금으로 만들려면 매달 약 **{monthly_needed:,.0f}만원**을 10년간 납입해야 해요.")
-else:
-    st.markdown("❗ 현재 입력한 이자율로는 계산이 불가능합니다.")
+        effective_rate = (deposit_rate / 100) * (1 - 0.154)
+        if effective_rate > 0:
+            monthly_needed = bonus / (effective_rate * 5.5)
+            st.markdown(f"👉 단기납 보너스 총합을 적금으로 만들려면 매달 약 **{monthly_needed:,.0f}만원**을 10년간 납입해야 해요.")
+        else:
+            st.markdown("❗ 현재 입력한 이자율로는 계산이 불가능합니다.")
 
 
         # 인쇄 CSS 처리
