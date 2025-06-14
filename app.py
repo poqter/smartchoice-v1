@@ -96,14 +96,3 @@ if st.button("결과 보기"):
         }
         </style>
         """, unsafe_allow_html=True)
-
-        # 새 창에서 인쇄하기 버튼
-        st.markdown("""
-        <div class="no-print" style="margin-top: 30px;">
-            <a href="https://poqter.github.io/pdf-export/save.html" target="_blank" 
-               style="padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; 
-                      text-decoration: none; border-radius: 8px; font-weight: bold;">
-                📄 결과 저장 페이지 열기
-            </a>
-        </div>
-        """, unsafe_allow_html=True)
