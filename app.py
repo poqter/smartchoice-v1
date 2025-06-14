@@ -7,9 +7,11 @@ st.set_page_config(page_title="적금 vs 단기납 비교", layout="wide")
 # 강조 박스 함수
 def emphasize_box(text, bg="#e6f2ff", color="#003366"):
     return f"""<div style='background-color:{bg}; color:{color}; padding:12px; border-radius:10px;
-                font-size:20px; font-weight:bold; margin-bottom:10px;'>{text}</div>"""
+                font-size:20px; font-weight:bold; margin-bottom:10px;'>
+                {text}
+             </div>"""
 
-# 금액 포맷 함수
+# 금액 포맷 함수 (만원 이하 삭제용)
 def format_currency_trim(value):
     won = int(value * 10000)
     if won % 10000 == 0:
@@ -67,7 +69,7 @@ if st.button("결과 보기"):
         st.markdown("---")
         st.subheader("🔍 결과 분석")
 
-        # 적금 이자 계산
+        # 적금 이자 계산 (12개월 분할 계산)
         monthly_rate = (deposit_rate / 100) / 12
         total_deposit = deposit_monthly * 12
         interest_sum = sum([deposit_monthly * monthly_rate * (12 - m) for m in range(12)])
@@ -97,19 +99,18 @@ if st.button("결과 보기"):
             st.markdown("### 📜 단기납 계산 요약")
             st.write(f"- 원금 합계 (5년): {format_currency_trim(total_insurance)}")
             st.write(f"- 10년 시점 해지회급금: {format_currency_trim(refund)}")
-            st.write(f"- 단기납 보너스 금액: {format_currency_trim(bonus)}")
+            st.write(f"- 보너스 금액: {format_currency_trim(bonus)}")
 
         # 핵심 요약
         st.markdown("### ✅ 핵심 요약 (만원 단위 미만은 삭제)")
         colm1, colm2 = st.columns(2)
         with colm1:
-            st.markdown(f"<h3>세후 이자 총합 (10년 기준): <span style='color:red'>{int(total_after_tax_interest_10y // 1)}만원</span></h3>", unsafe_allow_html=True)
+            st.metric("세후 이자 총합 (10년 기준)", f"{int(total_after_tax_interest_10y // 1)}만원")
             st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
-
         with colm2:
-            st.markdown(f"<h3>단기납 보너스 총합 (10년년 기준): <span style='color:red'>{int(bonus // 1)}만원</span></h3>", unsafe_allow_html=True)
-            st.markdown(emphasize_box(f"단기납 보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
+            st.metric("보너스 총합 (단기납 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
         # 인쇄 CSS 처리
         st.markdown("""
