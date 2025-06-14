@@ -15,23 +15,15 @@ def emphasize_box(text, bg="#e6f2ff", color="#003366"):
              </div>"""
 
 # PDF 저장 함수
-class PDF(FPDF):
-    def __init__(self):
-        super().__init__()
-        self.buffer = BytesIO()
-
-    def output_buffer(self):
-        self.output(self.buffer)
-        self.buffer.seek(0)
-        return self.buffer
 
 def generate_pdf(summary_text):
-    pdf = PDF()
+    pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
     for line in summary_text.strip().split("\n"):
         pdf.cell(0, 10, line, ln=True)
-    return pdf.output_buffer()
+    pdf_bytes = pdf.output(dest='S').encode('latin1')
+    return BytesIO(pdf_bytes)
 
 # 타이틀
 st.title("💰 적금 vs 단기납 비교 분석 도구")
