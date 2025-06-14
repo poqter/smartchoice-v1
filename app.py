@@ -82,26 +82,6 @@ if st.button("결과 보기"):
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # 이미지 저장 기능
-        st.markdown("---")
-        st.subheader("🖼️ 결과 이미지 저장")
-        if st.button("이미지 다운로드"):
-            img = Image.new('RGB', (800, 400), color=(255, 255, 255))
-            draw = ImageDraw.Draw(img)
-            draw.text((20, 20), f"적금 세후이자 총합: {total_after_tax_interest_10y:,.0f}만원", fill=(0, 0, 0))
-            draw.text((20, 60), f"단기납 보너스 총합: {bonus:,.0f}만원", fill=(0, 0, 0))
-
-            buffer = io.BytesIO()
-            img.save(buffer, format="PNG")
-            buffer.seek(0)
-
-            st.download_button(
-                label="📥 이미지 다운로드",
-                data=buffer,
-                file_name="결과_요약.png",
-                mime="image/png"
-            )
-
         # 저장 안내 (화면 인쇄 시 표시되지 않도록 CSS 클래스 적용)
         st.markdown("---")
         st.markdown("""
