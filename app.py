@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import time
 import streamlit.components.v1 as components
-from PIL import Image, ImageDraw
-import io
 
 # 페이지 설정
 st.set_page_config(page_title="적금 vs 단기납 비교", layout="wide")
@@ -82,12 +80,16 @@ if st.button("결과 보기"):
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # 저장 안내 (화면 인쇄 시 표시되지 않도록 CSS 클래스 적용)
+        # 외부 저장용 HTML 페이지 연결 버튼
         st.markdown("---")
         st.markdown("""
         <div class="no-print" style="font-size:16px;">
-        📥 <strong>Tip:</strong> <code>Ctrl + P</code>를 눌러 결과를 인쇄하거나 PDF로 저장할 수 있어요.<br>
-        🔧 <strong>설정 더 보기</strong>에서 <u>머리글과 바닥글</u>은 <strong>체크 해제</strong>, <u>배경 그래픽</u>은 <strong>체크</strong>하면 더 깔끔하게 저장됩니다.
+        📥 <strong>Tip:</strong> 결과를 PDF로 저장하고 싶다면 아래 버튼을 클릭하세요.<br><br>
+        <a href="https://your-external-site.com/save.html" target="_blank" style="text-decoration:none;">
+            <button style="padding:10px 20px; font-size:16px; font-weight:bold;
+            background-color:#4CAF50; color:white; border:none; border-radius:8px; cursor:pointer;">
+            📄 결과 저장 페이지 열기</button>
+        </a>
         </div>
         <style>
         @media print {
