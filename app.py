@@ -6,16 +6,12 @@ import streamlit.components.v1 as components
 # 페이지 설정
 st.set_page_config(page_title="적금 vs 단기납 비교", layout="wide")
 
-# 강조 카드 함수
-def emphasize_card(title, value, subtext="", bg="#e6f2ff", color="#003366"):
-    return f"""
-    <div style='background-color:{bg}; color:{color}; padding:20px; border-radius:12px;
-                font-size:18px; font-weight:600; margin:10px 0; box-shadow:2px 2px 8px rgba(0,0,0,0.1);'>
-        <div style='font-size:16px; opacity:0.8;'>{title}</div>
-        <div style='font-size:24px; font-weight:800;'>{value}</div>
-        <div style='font-size:14px; opacity:0.6;'>{subtext}</div>
-    </div>
-    """
+# 강조 박스 함수
+def emphasize_box(text, bg="#e6f2ff", color="#003366"):
+    return f"""<div style='background-color:{bg}; color:{color}; padding:12px; border-radius:10px;
+                font-size:20px; font-weight:bold; margin-bottom:10px;'>
+                {text}
+             </div>"""
 
 # 타이틀
 st.title("💰 적금 vs 단기납 비교 배경 도구")
@@ -66,6 +62,7 @@ if st.button("결과 보기"):
             st.write(f"- 세전 이자: {pre_tax_interest:,.0f}만원")
             st.write(f"- 이자 과세 (15.4%): {tax:,.0f}만원")
             st.write(f"- 세후 이자: {after_tax_interest:,.0f}만원")
+            st.write(f"- 세후 이자 x 10년: {total_after_tax_interest_10y:,.0f}만원")
 
         with sum2:
             st.markdown("### 🧾 단기납 계산 요약")
@@ -78,12 +75,22 @@ if st.button("결과 보기"):
         colm1, colm2 = st.columns(2)
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{total_after_tax_interest_10y:,.0f}만원")
-            st.markdown(emphasize_card("세후 이자 월 평균", f"{monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
-            delta_monthly = monthly_bonus - monthly_avg_interest
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
-            st.markdown(emphasize_card("보너스 월 평균", f"{monthly_bonus:,.2f}만원", subtext=f"차이: {delta_monthly:+.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # 이미지 저장 안내 문구
+        # 강조 박스
+        colh1, colh2 = st.columns(2)
+        with colh1:
+            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
+        with colh2:
+            st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
+
+        # 인쇄 버튼 (JS 동작 포함)
         st.markdown("---")
-        st.markdown("<center><p style='font-size:16px;'>📷 모바일이나 PC에서 <b>우클릭 → 이미지로 저장</b> 기능을 이용해 결과 화면을 저장하세요.</p></center>", unsafe_allow_html=True)
+        components.html("""
+            <center>
+            <button onclick="window.print()" style="padding:10px 20px; font-size:16px; font-weight:bold;
+            background-color:#4CAF50; color:white; border:none; border-radius:8px; cursor:pointer;">
+            🖨️ 인쇄하기</button>
+            </center>
+        """, height=100)
