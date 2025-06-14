@@ -7,35 +7,36 @@ st.set_page_config(page_title="적금 vs 단기납 비교", layout="wide")
 # 강조 박스 함수
 def emphasize_box(text, bg="#e6f2ff", color="#003366"):
     return f"""<div style='background-color:{bg}; color:{color}; padding:12px; border-radius:10px;
-                font-size:20px; font-weight:bold; margin-bottom:10px;'>
-                {text}
-             </div>"""
+                font-size:14px; font-weight:bold; margin-bottom:6px;'>{text}</div>"""
 
 # 금액 포맷 함수 (만원 이하 삭제용)
 def format_currency_trim(value):
     won = int(value * 10000)
-    if won % 10000 == 0:
-        return f"{won // 10000:,}만원"
-    else:
-        return f"{won:,}원"
+    return f"{won:,}원"
 
-# 사이드바 인쇄 안내
-with st.sidebar:
-    st.markdown("""
-    📄 **인쇄 안내**
-
-    🖨️ 오른쪽 위 ... 버튼 → print를 누르면 인쇄하거나 PDF로 저장할 수 있어요.
-
-    🔧 **설정 더 보기**에서:
-    - 머리글과 바닥글 ❌ 체크 해제
-    - 배경 그래픽 ✅ 체크
-
-    🔍 **배율은 95%**로 설정하는 것이 가장 적절합니다.
-    """)
-
-# 제목 링크 아이콘 숨기기
+# 인쇄용 CSS 스타일 적용
 st.markdown("""
 <style>
+@media print {
+    html, body {
+        font-size: 11pt;
+        line-height: 1.3;
+        margin: 10mm 12mm;
+    }
+    .block-container {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .element-container {
+        margin-bottom: 6px !important;
+    }
+    .sidebar, .no-print, header, footer {
+        display: none !important;
+    }
+    h1, h2, h3 {
+        margin: 4px 0;
+    }
+}
 h1 a, h2 a, h3 a {
     display: none !important;
 }
@@ -43,18 +44,18 @@ h1 a, h2 a, h3 a {
 """, unsafe_allow_html=True)
 
 # 타이틀
-st.title("💰 적금 vs 단기납 비교")
+st.markdown("## 💰 적금 vs 단기납 비교")
 
 # 입력 칼럼
 col1, col2 = st.columns(2)
 
 with col1:
-    st.header("📌 적금")
+    st.markdown("**📌 적금 조건 입력**")
     deposit_monthly = st.number_input("월 납입액 (만원)", min_value=0, step=1, value=None, format="%d", placeholder="예: 100")
     deposit_rate = st.number_input("연 이자율 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 2.5")
 
 with col2:
-    st.header("📌 단기납")
+    st.markdown("**📌 단기납 조건 입력**")
     insurance_monthly = st.number_input("월 납입액 (만원)", min_value=0, step=1, value=None, format="%d", placeholder="예: 100", key="ins_monthly")
     return_rate = st.number_input("10년 시점 해지회급률 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 150.0")
 
@@ -64,20 +65,19 @@ if st.button("결과 보기"):
         st.warning("⚠️ 모든 항목에 값을 입력해주세요.")
     else:
         with st.spinner("결과를 계산 중입니다..."):
-            time.sleep(1.2)
+            time.sleep(1.0)
 
         st.markdown("---")
-        st.subheader("🔍 결과 분석")
+        st.markdown("### 🔍 결과 요약")
 
-        # 적금 이자 계산 (12개월 분할 계산)
+        # 적금 계산
         monthly_rate = (deposit_rate / 100) / 12
         total_deposit = deposit_monthly * 12
         interest_sum = sum([deposit_monthly * monthly_rate * (12 - m) for m in range(12)])
-        pre_tax_interest = interest_sum
-        tax = pre_tax_interest * 0.154
-        after_tax_interest = pre_tax_interest - tax
-        monthly_avg_interest = after_tax_interest / 12
+        tax = interest_sum * 0.154
+        after_tax_interest = interest_sum - tax
         total_after_tax_interest_10y = after_tax_interest * 10
+        monthly_avg_interest = after_tax_interest / 12
 
         # 단기납 계산
         total_insurance = insurance_monthly * 12 * 5
@@ -86,68 +86,22 @@ if st.button("결과 보기"):
         monthly_bonus = bonus / 120
 
         # 요약 출력
-        sum1, sum2 = st.columns(2)
+        st.markdown(f"**✔️ 적금 세후 이자 총합 (10년)**: <span style='color:red'>{int(total_after_tax_interest_10y)}만원</span>", unsafe_allow_html=True)
+        st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest * 10000:,.0f}원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
 
-        with sum1:
-            st.markdown("### 📜 적금 계산 요약")
-            st.write(f"- 원금 합계 (1년): {format_currency_trim(total_deposit)}")
-            st.write(f"- 세전 이자: {format_currency_trim(pre_tax_interest)}")
-            st.write(f"- 이자 과세 (15.4%): {format_currency_trim(tax)}")
-            st.write(f"- 세후 이자: {format_currency_trim(after_tax_interest)}")
+        st.markdown(f"**✔️ 단기납 보너스 총합 (10년)**: <span style='color:red'>{int(bonus)}만원</span>", unsafe_allow_html=True)
+        st.markdown(emphasize_box(f"단기납 보너스 월 평균: {monthly_bonus * 10000:,.0f}원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        with sum2:
-            st.markdown("### 📜 단기납 계산 요약")
-            st.write(f"- 원금 합계 (5년): {format_currency_trim(total_insurance)}")
-            st.write(f"- 10년 시점 해지환환급금: {format_currency_trim(refund)}")
-            st.write(f"- 단기납 보너스 금액: {format_currency_trim(bonus)}")
-            st.write(f"- 10년 이후 해지 시, **비과세 혜택** 적용 가능")
+        # 단기납 설명 추가
+        st.caption("💡 10년 이후 해지 시, **비과세 혜택** 적용 가능")
 
-        # 핵심 요약
-        st.markdown("### ✅ 핵심 요약 (만원 단위 미만은 삭제)")
-        colm1, colm2 = st.columns(2)
-        with colm1:
-            st.metric("세후 이자 총합 (10년 기준)", f"{int(total_after_tax_interest_10y // 1)}만원")
-            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest * 10000:,.0f}원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
-        with colm2:
-            st.metric("단기납 보너스 총합 (10년 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
-            st.markdown(emphasize_box(f"단기납 보너스 월 평균: {monthly_bonus * 10000:,.0f}원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
-        # 핵심 요약 밑에 추가
+        # 역산 계산
         st.markdown("---")
-        st.markdown("### 📌 참고 계산")
+        st.markdown("### 📌 비교 계산")
 
         if deposit_rate > 0:
-            monthly_rate = (deposit_rate / 100) / 12
             factor = sum([(12 - m) * monthly_rate for m in range(12)])
             monthly_required = (bonus / 10) / (factor * (1 - 0.154))
             st.markdown(f"👉 단기납 보너스 총합을 적금 세후 이자로 만들려면, 매달 약 **{monthly_required:,.0f}만원**을 10년간 납입해야 해요.")
         else:
             st.markdown("❗ 연 이자율이 0%여서 비교 계산이 불가능합니다.")
-
-
-        # 인쇄 CSS 처리
-        st.markdown("""
-        <style>
-        @media print {
-            html, body {
-                margin: 0;
-                padding: 0;
-                height: auto !important;
-                overflow: visible !important;
-            }
-            .block-container {
-                padding-bottom: 0 !important;
-                margin-bottom: 0 !important;
-            }
-            main:after {
-                content: none !important;
-            }
-            .no-print {
-                display: none;
-            }
-        }
-        h1 a, h2 a, h3 a {
-            display: none !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
