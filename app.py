@@ -42,9 +42,13 @@ if st.button("결과 보기"):
         st.markdown("---")
         st.subheader("🔍 결과 분석")
 
-        # 계산
+        # 적금 이자 계산 (12개월 분할 계산)
+        monthly_rate = (deposit_rate / 100) / 12
         total_deposit = deposit_monthly * 12
-        pre_tax_interest = total_deposit * (deposit_rate / 100)
+        interest_sum = 0
+        for m in range(12):
+            interest_sum += deposit_monthly * monthly_rate * (12 - m)
+        pre_tax_interest = interest_sum
         tax = pre_tax_interest * 0.154
         after_tax_interest = pre_tax_interest - tax
         monthly_avg_interest = after_tax_interest / 12
