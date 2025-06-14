@@ -43,6 +43,18 @@ if not st.session_state.hide_sidebar:
         if st.button("❌ 안내 닫기"):
             st.session_state.hide_sidebar = True
 
+# 안내 열기 버튼 (인쇄 시 제외)
+st.markdown("""
+<div class="no-print" style="text-align: right;">
+    <button onclick="window.location.reload();" style="font-size:14px; padding:6px 12px; border:none; background-color:#e0e0e0; border-radius:8px; cursor:pointer;">📘 안내 열기</button>
+</div>
+<style>
+@media print {
+    .no-print {display: none;}
+}
+</style>
+""", unsafe_allow_html=True)
+
 # 타이틀
 st.title("💰 적금 vs 단기납 비교")
 
