@@ -10,7 +10,7 @@ def emphasize_box(text, bg="#e6f2ff", color="#003366"):
     return f"""<div style='background-color:{bg}; color:{color}; padding:12px; border-radius:10px;
                 font-size:20px; font-weight:bold; margin-bottom:10px;'>
                 {text}
-             </div>""""
+             </div>"""
 
 # 타이틀
 st.title("💰 적금 vs 단기납 비교 분석 도구")
