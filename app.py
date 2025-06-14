@@ -5,10 +5,17 @@ import time
 # 페이지 설정
 st.set_page_config(page_title="적금 vs 단기납 비교", layout="wide")
 
+# 강조 박스 함수
+def emphasize_box(text, bg="#e6f2ff", color="#003366"):
+    return f"""<div style='background-color:{bg}; color:{color}; padding:12px; border-radius:10px;
+                font-size:20px; font-weight:bold; margin-bottom:10px;'>
+                {text}
+             </div>""""
+
 # 타이틀
 st.title("💰 적금 vs 단기납 비교 분석 도구")
 
-# 컬럼 나누기
+# 입력 컬럼
 col1, col2 = st.columns(2)
 
 with col1:
@@ -27,26 +34,27 @@ if st.button("결과 보기"):
         st.warning("⚠️ 모든 항목에 값을 입력해주세요.")
     else:
         with st.spinner("결과를 분석하는 중입니다..."):
-            time.sleep(1.2)  # 애니메이션처럼 결과 지연 출력
+            time.sleep(1.2)
 
         st.markdown("---")
         st.subheader("🔍 결과 분석")
 
-        # 계산 파트
-        total_deposit = deposit_monthly * 12  # 1년 기준
+        # 계산
+        total_deposit = deposit_monthly * 12
         pre_tax_interest = total_deposit * (deposit_rate / 100)
         tax = pre_tax_interest * 0.154
         after_tax_interest = pre_tax_interest - tax
         monthly_avg_interest = after_tax_interest / 12
         total_after_tax_interest_10y = after_tax_interest * 10
 
-        total_insurance = insurance_monthly * 12 * 5  # 5년 기준
+        total_insurance = insurance_monthly * 12 * 5
         refund = total_insurance * (return_rate / 100)
         bonus = refund - total_insurance
         monthly_bonus = bonus / 120
 
-        # 계산 상세 - 좌우로 분리
+        # 요약 출력
         sum1, sum2 = st.columns(2)
+
         with sum1:
             st.markdown("### 🧾 적금 계산 요약")
             st.write(f"- 원금 합계 (1년): {total_deposit:,.0f}만원")
@@ -54,24 +62,16 @@ if st.button("결과 보기"):
             st.write(f"- 이자 과세 (15.4%): {tax:,.0f}만원")
             st.write(f"- 세후 이자: {after_tax_interest:,.0f}만원")
             st.write(f"- 세후 이자 × 10년: {total_after_tax_interest_10y:,.0f}만원")
-            st.markdown(
-                f"<div style='background-color:#e6f2ff; padding:10px; border-radius:8px; font-size:18px; font-weight:bold;'>"
-                f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원"
-                f"</div>", unsafe_allow_html=True
-            )
+            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
 
         with sum2:
             st.markdown("### 🧾 단기납 계산 요약")
             st.write(f"- 원금 합계 (5년): {total_insurance:,.0f}만원")
             st.write(f"- 10년 시점 해지환급금: {refund:,.0f}만원")
             st.write(f"- 보너스 금액: {bonus:,.0f}만원")
-            st.markdown(
-                f"<div style='background-color:#fff3e6; padding:10px; border-radius:8px; font-size:18px; font-weight:bold;'>"
-                f"보너스 월 평균: {monthly_bonus:,.2f}만원"
-                f"</div>", unsafe_allow_html=True
-            )
+            st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # metric 강조
+        # 핵심 요약
         st.markdown("### ✅ 핵심 요약")
         colm1, colm2 = st.columns(2)
         with colm1:
