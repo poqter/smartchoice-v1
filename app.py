@@ -116,12 +116,13 @@ if st.button("결과 보기"):
         st.markdown("---")
         st.markdown("### 📌 참고 계산")
 
-        effective_rate = (deposit_rate / 100) * (1 - 0.154)
-        if effective_rate > 0:
-            monthly_needed = bonus / (effective_rate * 5.5)
-            st.markdown(f"👉 단기납 보너스 총합을 적금으로 만들려면 매달 약 **{monthly_needed:,.0f}만원**을 10년간 납입해야 해요.")
+        if deposit_rate > 0:
+            monthly_rate = (deposit_rate / 100) / 12
+            factor = sum([(12 - m) * monthly_rate for m in range(12)])
+            monthly_required = (bonus / 10) / (factor * (1 - 0.154))
+            st.markdown(f"👉 단기납 보너스 총합을 적금 세후 이자로 만들려면, 매달 약 **{monthly_required:,.0f}만원**을 10년간 납입해야 해요.")
         else:
-            st.markdown("❗ 현재 입력한 이자율로는 계산이 불가능합니다.")
+            st.markdown("❗ 연 이자율이 0%여서 비교 계산이 불가능합니다.")
 
 
         # 인쇄 CSS 처리
