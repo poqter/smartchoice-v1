@@ -23,37 +23,19 @@ def format_currency_trim(value):
     else:
         return f"{won:,}원"
 
-# 사이드바 인쇄 안내 및 닫기 기능
-if "hide_sidebar" not in st.session_state:
-    st.session_state.hide_sidebar = False
+# 사이드바 인쇄 안내
+with st.sidebar:
+    st.markdown("""
+    📄 **인쇄 안내**
 
-if not st.session_state.hide_sidebar:
-    with st.sidebar:
-        st.markdown("""
-        📄 **인쇄 안내**
+    🖨️ **Ctrl + P**를 누르면 결과를 인쇄하거나 PDF로 저장할 수 있어요.
 
-        🖨️ **Ctrl + P**를 누르면 결과를 인쇄하거나 PDF로 저장할 수 있어요.
+    🔧 **설정 더 보기**에서:
+    - 머리글과 바닥글 ❌ 체크 해제
+    - 배경 그래픽 ✅ 체크
 
-        🔧 **설정 더 보기**에서:
-        - 머리글과 바닥글 ❌ 체크 해제
-        - 배경 그래픽 ✅ 체크
-
-        🔍 **배율은 95%**로 설정하는 것이 가장 적절합니다.
-        """)
-        if st.button("❌ 안내 닫기"):
-            st.session_state.hide_sidebar = True
-
-# 안내 열기 버튼 (인쇄 시 제외)
-st.markdown("""
-<div class="no-print" style="text-align: right;">
-    <button onclick="window.location.reload();" style="font-size:14px; padding:6px 12px; border:none; background-color:#e0e0e0; border-radius:8px; cursor:pointer;">📘 안내 열기</button>
-</div>
-<style>
-@media print {
-    .no-print {display: none;}
-}
-</style>
-""", unsafe_allow_html=True)
+    🔍 **배율은 95%**로 설정하는 것이 가장 적절합니다.
+    """)
 
 # 타이틀
 st.title("💰 적금 vs 단기납 비교")
