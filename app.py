@@ -15,16 +15,23 @@ def emphasize_box(text, bg="#e6f2ff", color="#003366"):
              </div>"""
 
 # PDF 저장 함수
+class PDF(FPDF):
+    def __init__(self):
+        super().__init__()
+        self.buffer = BytesIO()
+
+    def output_buffer(self):
+        self.output(self.buffer)
+        self.buffer.seek(0)
+        return self.buffer
+
 def generate_pdf(summary_text):
-    pdf = FPDF()
+    pdf = PDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
-    for line in summary_text.split("\n"):
-        pdf.cell(200, 10, txt=line, ln=True)
-    pdf_output = BytesIO()
-    pdf.output(pdf_output)
-    pdf_output.seek(0)
-    return pdf_output
+    for line in summary_text.strip().split("\n"):
+        pdf.cell(0, 10, line, ln=True)
+    return pdf.output_buffer()
 
 # 타이틀
 st.title("💰 적금 vs 단기납 비교 분석 도구")
@@ -95,8 +102,7 @@ if st.button("결과 보기"):
 
         # PDF 생성 버튼
         st.markdown("---")
-        if st.button("📄 결과 PDF로 저장"):
-            summary_text = f"""
+        summary_text = f"""
 📌 적금
 - 원금 합계 (1년): {total_deposit:,.0f}만원
 - 세전 이자: {pre_tax_interest:,.0f}만원
@@ -115,5 +121,5 @@ if st.button("결과 보기"):
 - 세후 이자 총합 (10년 기준): {total_after_tax_interest_10y:,.0f}만원
 - 보너스 총합 (단기납 기준): {bonus:,.0f}만원
 """
-            pdf_file = generate_pdf(summary_text)
-            st.download_button("📥 PDF 다운로드", data=pdf_file, file_name="결과_요약.pdf", mime="application/pdf")
+        pdf_file = generate_pdf(summary_text)
+        st.download_button("📥 PDF 다운로드", data=pdf_file, file_name="결과_요약.pdf", mime="application/pdf")
