@@ -116,20 +116,33 @@ if st.button("결과 보기"):
         st.markdown("---")
         st.markdown("### 📌 참고 계산")
 
+        # 1. 적금 월 납입액 역산
         if deposit_rate > 0:
             monthly_rate = (deposit_rate / 100) / 12
             factor = sum([(12 - m) * monthly_rate for m in range(12)])
             monthly_required = (bonus / 10) / (factor * (1 - 0.154))
-            st.markdown(f"👉 단기납 보너스 총합을 적금 세후 이자로 만들려면, 매달 약 **{monthly_required:,.0f}만원**으로 변경해야 해요.")
+            st.markdown(f"""
+            <div style='font-size:18px; margin-top:8px; margin-bottom:6px;'>
+                👉 단기납 보너스 총합을 만들려면,<br>
+                매달 <span style='color:red; font-weight:bold;'>{monthly_required:,.0f}만원</span>을 10년간 적금해야 합니다.
+            </div>
+            """, unsafe_allow_html=True)
         else:
             st.markdown("❗ 연 이자율이 0%여서 비교 계산이 불가능합니다.")
-        # 적금 연이자율 역산 계산
+
+        # 2. 연 이자율 역산
         if deposit_monthly > 0:
             r_monthly = (bonus / 10) / (deposit_monthly * 78 * (1 - 0.154))
             deposit_rate_needed = r_monthly * 12 * 100
-            st.markdown(f"👉 현재 적금 월 납입액으로 단기납 보너스 총합을 만들려면, 연 이자율이 약 **{deposit_rate_needed:,.2f}%**으로 변경경해요.")
+            st.markdown(f"""
+            <div style='font-size:18px; margin-top:4px; margin-bottom:8px;'>
+                👉 현재 적금 월 납입액으로 같아지려면,<br>
+                연 이자율이 <span style='color:red; font-weight:bold;'>{deposit_rate_needed:,.2f}%</span>이어야 합니다.
+            </div>
+            """, unsafe_allow_html=True)
         else:
             st.markdown("❗ 월 납입액이 0원이면 이자율 계산이 불가능합니다.")
+
 
         # 인쇄 CSS 처리
         st.markdown("""
