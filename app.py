@@ -21,17 +21,17 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.header("📌 적금")
-    deposit_monthly = st.number_input("월 납입액 (만원)", min_value=0.0, step=1.0, value=None, placeholder="예: 100")
+    deposit_monthly = st.number_input("월 납입액 (만원)", min_value=0, step=1, value=None, format="%d", placeholder="예: 100")
     deposit_rate = st.number_input("연 이자율 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 2.5")
 
 with col2:
     st.header("📌 단기납")
-    insurance_monthly = st.number_input("월 납입액 (만원)", min_value=0.0, step=1.0, value=None, placeholder="예: 100", key="ins_monthly")
+    insurance_monthly = st.number_input("월 납입액 (만원)", min_value=0, step=1, value=None, format="%d", placeholder="예: 100", key="ins_monthly")
     return_rate = st.number_input("10년 시점 해지환급률 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 150.0")
 
 # 결과 보기 버튼
 if st.button("결과 보기"):
-    if deposit_monthly in (None, 0.0) or deposit_rate in (None, 0.0) or insurance_monthly in (None, 0.0) or return_rate in (None, 0.0):
+    if deposit_monthly in (None, 0) or deposit_rate in (None, 0.0) or insurance_monthly in (None, 0) or return_rate in (None, 0.0):
         st.warning("⚠️ 모든 항목에 값을 입력해주세요.")
     else:
         with st.spinner("결과를 분석하는 중입니다..."):
@@ -62,7 +62,6 @@ if st.button("결과 보기"):
             st.write(f"- 세전 이자: {pre_tax_interest:,.0f}만원")
             st.write(f"- 이자 과세 (15.4%): {tax:,.0f}만원")
             st.write(f"- 세후 이자: {after_tax_interest:,.0f}만원")
-            st.write(f"- 세후 이자 x 10년: {total_after_tax_interest_10y:,.0f}만원")
 
         with sum2:
             st.markdown("### 🧾 단기납 계산 요약")
@@ -75,22 +74,11 @@ if st.button("결과 보기"):
         colm1, colm2 = st.columns(2)
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{total_after_tax_interest_10y:,.0f}만원")
+            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
-
-        # 강조 박스
-        colh1, colh2 = st.columns(2)
-        with colh1:
-            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
-        with colh2:
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # 인쇄 버튼 (JS 동작 포함)
+        # 저장 안내
         st.markdown("---")
-        components.html("""
-            <center>
-            <button onclick="window.print()" style="padding:10px 20px; font-size:16px; font-weight:bold;
-            background-color:#4CAF50; color:white; border:none; border-radius:8px; cursor:pointer;">
-            🖨️ 인쇄하기</button>
-            </center>
-        """, height=100)
+        st.markdown("📢 **Tip:** 결과를 저장하려면 `Ctrl + P`를 눌러 인쇄 또는 PDF 저장을 이용하세요.")
