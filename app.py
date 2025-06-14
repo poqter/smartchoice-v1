@@ -108,10 +108,10 @@ if st.button("결과 보기"):
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{int(total_after_tax_interest_10y // 1)}만원")
             st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
+            st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest * 10000:,.0f}원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("단기납 보너스 총합 (10년 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
-            st.markdown(emphasize_box(f"단기납 보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
+            st.markdown(emphasize_box(f"단기납 보너스 월 평균: {monthly_bonus * 10000:,.0f}원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
         # 인쇄 CSS 처리
         st.markdown("""
