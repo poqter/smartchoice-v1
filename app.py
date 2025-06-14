@@ -46,20 +46,23 @@ if st.button("결과 보기"):
         bonus = refund - total_insurance
         monthly_bonus = bonus / 120
 
-        # 계산 상세 바로 출력
-        st.markdown("### 🧾 적금 계산 요약")
-        st.write(f"- 원금 합계 (1년): {total_deposit:,.0f}만원")
-        st.write(f"- 세전 이자: {pre_tax_interest:,.0f}만원")
-        st.write(f"- 이자 과세 (15.4%): {tax:,.0f}만원")
-        st.write(f"- 세후 이자: {after_tax_interest:,.0f}만원")
-        st.write(f"- 세후 이자 × 10년: {total_after_tax_interest_10y:,.0f}만원")
-        st.write(f"- 세후 이자 월 평균: {monthly_avg_interest:,.2f}만원")
+        # 계산 상세 - 좌우로 분리
+        sum1, sum2 = st.columns(2)
+        with sum1:
+            st.markdown("### 🧾 적금 계산 요약")
+            st.write(f"- 원금 합계 (1년): {total_deposit:,.0f}만원")
+            st.write(f"- 세전 이자: {pre_tax_interest:,.0f}만원")
+            st.write(f"- 이자 과세 (15.4%): {tax:,.0f}만원")
+            st.write(f"- 세후 이자: {after_tax_interest:,.0f}만원")
+            st.write(f"- 세후 이자 × 10년: {total_after_tax_interest_10y:,.0f}만원")
+            st.write(f"- 세후 이자 월 평균: {monthly_avg_interest:,.2f}만원")
 
-        st.markdown("### 🧾 단기납 계산 요약")
-        st.write(f"- 원금 합계 (10년): {total_insurance:,.0f}만원")
-        st.write(f"- 해지환급금: {refund:,.0f}만원")
-        st.write(f"- 보너스 금액: {bonus:,.0f}만원")
-        st.write(f"- 보너스 월 평균: {monthly_bonus:,.2f}만원")
+        with sum2:
+            st.markdown("### 🧾 단기납 계산 요약")
+            st.write(f"- 원금 합계 (10년): {total_insurance:,.0f}만원")
+            st.write(f"- 해지환급금: {refund:,.0f}만원")
+            st.write(f"- 보너스 금액: {bonus:,.0f}만원")
+            st.write(f"- 보너스 월 평균: {monthly_bonus:,.2f}만원")
 
         # 비교 테이블 생성
         compare_df = pd.DataFrame({
