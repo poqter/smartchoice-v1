@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import time
+import streamlit.components.v1 as components
 
 # 페이지 설정
 st.set_page_config(page_title="적금 vs 단기납 비교", layout="wide")
@@ -84,10 +85,12 @@ if st.button("결과 보기"):
         with colh2:
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
-        # 인쇄 버튼
+        # 인쇄 버튼 (JS 동작 포함)
         st.markdown("---")
-        st.markdown("""
+        components.html("""
             <center>
-            <button onclick="window.print()" style="padding:10px 20px; font-size:16px; font-weight:bold; background-color:#4CAF50; color:white; border:none; border-radius:8px; cursor:pointer;">
-            🖨️ 인쇄하기</button></center>
-        """, unsafe_allow_html=True)
+            <button onclick="window.print()" style="padding:10px 20px; font-size:16px; font-weight:bold;
+            background-color:#4CAF50; color:white; border:none; border-radius:8px; cursor:pointer;">
+            🖨️ 인쇄하기</button>
+            </center>
+        """, height=100)
