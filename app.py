@@ -14,7 +14,7 @@ def emphasize_box(text, bg="#e6f2ff", color="#003366"):
              </div>"""
 
 # 타이틀
-st.title("💰 적금 vs 단기납 비교 배경 도구")
+st.title("💰 적금 vs 단기납 비교")
 
 # 입력 칼럼
 col1, col2 = st.columns(2)
