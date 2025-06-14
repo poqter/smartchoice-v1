@@ -13,13 +13,13 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.header("📌 적금")
-    deposit_monthly = int(st.number_input("월 납입액 (만원)", min_value=0.0, step=1.0))
-    deposit_rate = st.number_input("연 이자율 (%)", min_value=0.0, step=0.1)
+    deposit_monthly = int(st.number_input("월 납입액 (만원)", min_value=0.0, step=1.0, value=None, placeholder="예: 100"))
+    deposit_rate = st.number_input("연 이자율 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 2.5")
 
 with col2:
     st.header("📌 단기납")
-    insurance_monthly = int(st.number_input("월 납입액 (만원)", min_value=0.0, step=1.0, key="ins_monthly"))
-    return_rate = st.number_input("10년 시점 환급률 (%)", min_value=0.0, step=0.1)
+    insurance_monthly = int(st.number_input("월 납입액 (만원)", min_value=0.0, step=1.0, value=None, placeholder="예: 100", key="ins_monthly"))
+    return_rate = st.number_input("10년 시점 환급률 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 150.0")
 
 # 결과 보기 버튼
 if st.button("결과 보기"):
