@@ -54,14 +54,14 @@ if st.button("결과 보기"):
             st.write(f"- 이자 과세 (15.4%): {tax:,.0f}만원")
             st.write(f"- 세후 이자: {after_tax_interest:,.0f}만원")
             st.write(f"- 세후 이자 × 10년: {total_after_tax_interest_10y:,.0f}만원")
-            st.write(f"- 세후 이자 월 평균: {monthly_avg_interest:,.2f}만원")
+            st.markdown(f"- **세후 이자 월 평균:** 🟢 **{monthly_avg_interest:,.2f}만원**")
 
         with sum2:
             st.markdown("### 🧾 단기납 계산 요약")
             st.write(f"- 원금 합계 (5년): {total_insurance:,.0f}만원")
             st.write(f"- 10년 시점 해지환급금: {refund:,.0f}만원")
             st.write(f"- 보너스 금액: {bonus:,.0f}만원")
-            st.write(f"- 보너스 월 평균: {monthly_bonus:,.2f}만원")
+            st.markdown(f"- **보너스 월 평균:** 🔵 **{monthly_bonus:,.2f}만원**")
 
         # metric 강조
         st.markdown("### ✅ 핵심 요약")
