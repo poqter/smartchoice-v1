@@ -41,15 +41,21 @@ st.markdown("""
 h1 a, h2 a, h3 a {
     display: none !important;
 }
-body, html {
+html, body {
     background-color: white !important;
     color: black !important;
 }
 [data-testid="stAppViewContainer"],
 [data-testid="stSidebar"],
 .block-container,
-button, input, label, span, div, p, select {
+button, input, label, span, div, p, select, textarea {
     color: black !important;
+    background-color: white !important;
+}
+button, input, select, textarea {
+    background-color: #333 !important;
+    color: white !important;
+    border: 1px solid #ccc !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -146,9 +152,6 @@ if st.button("결과 보기"):
             .no-print {
                 display: none;
             }
-        }
-        h1 a, h2 a, h3 a {
-            display: none !important;
         }
         </style>
         """, unsafe_allow_html=True)
