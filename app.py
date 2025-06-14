@@ -42,18 +42,15 @@ if st.button("결과 보기"):
         st.markdown("---")
         st.subheader("🔍 결과 분석")
 
-        # 적금 이자 계산 (12개월 분할 계산)
-        monthly_rate = (deposit_rate / 100) / 12
+        # 적금 이자 계산 (월복리처럼 각 월별 이자 반영)
         total_deposit = deposit_monthly * 12
-        interest_sum = 0
-        for m in range(12):
-            interest_sum += deposit_monthly * monthly_rate * (12 - m)
-        pre_tax_interest = interest_sum
+        pre_tax_interest = sum(deposit_monthly * (deposit_rate / 100) * ((12 - i) / 12) for i in range(12))
         tax = pre_tax_interest * 0.154
         after_tax_interest = pre_tax_interest - tax
         monthly_avg_interest = after_tax_interest / 12
         total_after_tax_interest_10y = after_tax_interest * 10
 
+        # 단기납 계산
         total_insurance = insurance_monthly * 12 * 5
         refund = total_insurance * (return_rate / 100)
         bonus = refund - total_insurance
@@ -80,10 +77,11 @@ if st.button("결과 보기"):
         colm1, colm2 = st.columns(2)
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{total_after_tax_interest_10y:,.0f}만원")
-            st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest:,.2f}만원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("보너스 총합 (단기납 기준)", f"{bonus:,.0f}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"보너스 월 평균: {monthly_bonus:,.2f}만원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
 
         # 저장 안내 (화면 인쇄 시 표시되지 않도록 CSS 클래스 적용)
