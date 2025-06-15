@@ -35,12 +35,13 @@ with st.sidebar:
     🚫 인쇄 시에는 이 안내 페이지 닫기.             
     """)
 
-# 제작자 정보 및 버전 표시
-
+ # 제작자 정보
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.markdown("""
     <div style='margin-bottom:10px;'>👨‍💻 <strong>제작자:</strong> 비전본부 드림지점 박병선 팀장</div>
     <div style='margin-bottom:10px;'>🗓️ <strong>버전:</strong> v1.0.0</div>
     <div style='margin-bottom:10px;'>📅 <strong>최종 업데이트:</strong> 2025-06-13</div>
-
+    """, unsafe_allow_html=True)
 
 # 제목 링크 아이콘 숨기기
 st.markdown("""
