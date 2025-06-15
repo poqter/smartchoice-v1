@@ -36,12 +36,11 @@ with st.sidebar:
     """)
 
 # 제작자 정보 및 버전 표시
-    st.markdown("---")
-    st.markdown("""
+
     <div style='margin-bottom:10px;'>👨‍💻 <strong>제작자:</strong> 비전본부 드림지점 박병선 팀장</div>
     <div style='margin-bottom:10px;'>🗓️ <strong>버전:</strong> v1.0.0</div>
     <div style='margin-bottom:10px;'>📅 <strong>최종 업데이트:</strong> 2025-06-13</div>
-    """)
+
 
 # 제목 링크 아이콘 숨기기
 st.markdown("""
