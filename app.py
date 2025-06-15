@@ -114,7 +114,7 @@ if st.button("결과 보기"):
             st.write(f"- 10년 이후 해지 시, **비과세 혜택** 적용 가능")
 
         # 핵심 요약
-        st.markdown("### ✅ 핵심 요약 (만원 단위 미만은 삭제)")
+        st.markdown("### ✅ 핵심 요약")
         colm1, colm2 = st.columns(2)
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{int(total_after_tax_interest_10y // 1)}만원")
