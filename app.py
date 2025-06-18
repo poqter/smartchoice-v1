@@ -7,9 +7,7 @@ st.set_page_config(page_title="적금 vs 단기납 비교", layout="wide")
 # 강조 박스 함수
 def emphasize_box(text, bg="#e6f2ff", color="#003366"):
     return f"""<div style='background-color:{bg}; color:{color}; padding:12px; border-radius:10px;
-                font-size:20px; font-weight:bold; margin-bottom:10px;'>
-                {text}
-             </div>"""
+                font-size:20px; font-weight:bold; margin-bottom:10px;'>{text}</div>"""
 
 # 금액 포맷 함수 (만원 이하 삭제용)
 def format_currency_trim(value):
@@ -34,8 +32,6 @@ with st.sidebar:
                 
     🚫 인쇄 시에는 이 안내 페이지 닫기.             
     """)
-
- # 제작자 정보
     st.markdown("<hr>", unsafe_allow_html=True)
     st.markdown("""
     <div style='margin-bottom:20px;'>👨‍💻 <strong>제작자:</strong> 비전본부 드림지점 박병선 팀장</div>
@@ -43,13 +39,10 @@ with st.sidebar:
     <div style='margin-bottom:20px;'>📅 <strong>최종 업데이트:</strong> 2025-06-13</div>
     """, unsafe_allow_html=True)
 
-
 # 제목 링크 아이콘 숨기기
 st.markdown("""
 <style>
-h1 a, h2 a, h3 a {
-    display: none !important;
-}
+h1 a, h2 a, h3 a { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -67,9 +60,10 @@ with col1:
 with col2:
     st.header("📌 단기납")
     insurance_monthly = st.number_input("월 납입액 (만원)", min_value=0, step=1, value=None, format="%d", placeholder="예: 100", key="ins_monthly")
+    pay_years = st.selectbox("납입 기간 (년)", [5, 7], index=0)
     return_rate = st.number_input("10년 시점 해지환환급률 (%)", min_value=0.0, step=0.1, value=None, placeholder="예: 123.0")
 
-# 결과 보기 버튼
+# 결과 버튼
 if st.button("결과 보기"):
     if deposit_monthly in (None, 0) or deposit_rate in (None, 0.0) or insurance_monthly in (None, 0) or return_rate in (None, 0.0):
         st.warning("⚠️ 모든 항목에 값을 입력해주세요.")
@@ -80,7 +74,7 @@ if st.button("결과 보기"):
         st.markdown("---")
         st.subheader("🔍 결과 분석")
 
-        # 적금 이자 계산 (12개월 분할 계산)
+        # 적금 계산
         monthly_rate = (deposit_rate / 100) / 12
         total_deposit = deposit_monthly * 12
         interest_sum = sum([deposit_monthly * monthly_rate * (12 - m) for m in range(12)])
@@ -90,15 +84,13 @@ if st.button("결과 보기"):
         monthly_avg_interest = after_tax_interest / 12
         total_after_tax_interest_10y = after_tax_interest * 10
 
-        # 단기납 계산
-        total_insurance = insurance_monthly * 12 * 5
+        # 단기납 계산 (납입기간 적용)
+        total_insurance = insurance_monthly * 12 * pay_years
         refund = total_insurance * (return_rate / 100)
         bonus = refund - total_insurance
         monthly_bonus = bonus / 120
 
-        # 요약 출력
         sum1, sum2 = st.columns(2)
-
         with sum1:
             st.markdown("### 📜 적금 계산 요약")
             st.write(f"- 원금 합계 (1년): {format_currency_trim(total_deposit)}")
@@ -108,7 +100,7 @@ if st.button("결과 보기"):
 
         with sum2:
             st.markdown("### 📜 단기납 계산 요약")
-            st.write(f"- 원금 합계 (5년): {format_currency_trim(total_insurance)}")
+            st.write(f"- 원금 합계 ({pay_years}년): {format_currency_trim(total_insurance)}")
             st.write(f"- 10년 시점 해지환급금: {format_currency_trim(refund)}")
             st.write(f"- 단기납 보너스 금액: {format_currency_trim(bonus)}")
             st.write(f"- 10년 이후 해지 시, **비과세 혜택** 적용 가능")
@@ -118,12 +110,12 @@ if st.button("결과 보기"):
         colm1, colm2 = st.columns(2)
         with colm1:
             st.metric("세후 이자 총합 (10년 기준)", f"{int(total_after_tax_interest_10y // 1)}만원")
-            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             st.markdown(emphasize_box(f"세후 이자 월 평균: {monthly_avg_interest * 10000:,.0f}원", bg="#e6f2ff", color="#003366"), unsafe_allow_html=True)
         with colm2:
             st.metric("단기납 보너스 총합 (10년 기준)", f"{int(bonus // 1)}만원", delta=f"{bonus - total_after_tax_interest_10y:,.0f}만원")
             st.markdown(emphasize_box(f"단기납 보너스 월 평균: {monthly_bonus * 10000:,.0f}원", bg="#fff3e6", color="#663300"), unsafe_allow_html=True)
-        # 핵심 요약 밑에 추가
+
+        # 참고 계산
         st.markdown("---")
         st.markdown("### 📌 참고 계산")
 
@@ -137,8 +129,6 @@ if st.button("결과 보기"):
                 👉 단기납 보너스 총합과 같으려면, 적금 월 납입액을 <span style='color:red; font-weight:bold;'>{monthly_required:,.0f}만원</span>으로 변경해야 합니다.
             </div>
             """, unsafe_allow_html=True)
-        else:
-            st.markdown("❗ 연 이자율이 0%여서 비교 계산이 불가능합니다.")
 
         # 2. 연 이자율 역산
         if deposit_monthly > 0:
@@ -149,11 +139,8 @@ if st.button("결과 보기"):
                 👉 현재 적금 월 납입액으로 단기납 보너스 총합과 같아지려면, 연 이자율이 <span style='color:red; font-weight:bold;'>{deposit_rate_needed:,.2f}%</span>여야 합니다.
             </div>
             """, unsafe_allow_html=True)
-        else:
-            st.markdown("❗ 월 납입액이 0원이면 이자율 계산이 불가능합니다.")
 
-
-        # 인쇄 CSS 처리
+        # 인쇄용 CSS
         st.markdown("""
         <style>
         @media print {
@@ -174,8 +161,6 @@ if st.button("결과 보기"):
                 display: none;
             }
         }
-        h1 a, h2 a, h3 a {
-            display: none !important;
-        }
+        h1 a, h2 a, h3 a { display: none !important; }
         </style>
         """, unsafe_allow_html=True)
